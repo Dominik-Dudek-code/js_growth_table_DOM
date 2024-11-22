@@ -5,8 +5,8 @@
 const table = document.querySelector('.field > tbody');
 const buttons = document.querySelector('.container');
 
-function modifyColumns(rezising) {
-  switch (rezising) {
+function modifyColumns(buttonType) {
+  switch (buttonType) {
     case 'append-row':
       table.appendChild(table.querySelector('tr').cloneNode(true));
       break;
