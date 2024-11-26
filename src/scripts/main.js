@@ -3,7 +3,14 @@
 // write code here
 
 const table = document.querySelector('.field > tbody');
-const buttons = document.querySelector('.container');
+const minLength = 2;
+const maxLength = 10;
+const buttonClasses = [
+  'append-row',
+  'append-column',
+  'remove-row',
+  'remove-column',
+];
 
 function modifyColumns(buttonType) {
   switch (buttonType) {
@@ -23,18 +30,12 @@ function modifyColumns(buttonType) {
         row.removeChild(row.cells[row.cells.length - 1]);
       });
       break;
+    default:
+      throw new Error('Unknown button pressed!');
   }
-
-  const rowsLength = table.rows.length;
-  const columnsLength = table.rows[0].cells.length;
-
-  document.querySelector('.append-row').disabled = rowsLength === 10;
-  document.querySelector('.remove-row').disabled = rowsLength === 2;
-  document.querySelector('.append-column').disabled = columnsLength === 10;
-  document.querySelector('.remove-column').disabled = columnsLength === 2;
 }
 
-buttons.addEventListener('click', (e) => {
+document.addEventListener('click', (e) => {
   if (!e.target.classList.contains('button')) {
     return;
   }
@@ -43,5 +44,21 @@ buttons.addEventListener('click', (e) => {
     return;
   }
 
-  modifyColumns(e.target.classList[0]);
+  const currentButton = [...e.target.classList].find((classes) => {
+    return buttonClasses.includes(classes);
+  });
+
+  modifyColumns(currentButton);
+
+  checkLength();
 });
+
+function checkLength() {
+  const rowLength = table.rows.length;
+  const colLength = table.rows[0].cells.length;
+
+  document.querySelector('.append-row').disabled = rowLength >= maxLength;
+  document.querySelector('.remove-row').disabled = rowLength <= minLength;
+  document.querySelector('.append-column').disabled = colLength >= maxLength;
+  document.querySelector('.remove-column').disabled = colLength <= minLength;
+}
